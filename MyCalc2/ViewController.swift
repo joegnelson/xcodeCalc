@@ -32,11 +32,11 @@ class ViewController: UIViewController {
         setButtonColor()
     }
     
-    @IBAction func ModeBttnTouchUpInside(sender: AnyObject) {
+    @IBAction func ModeBttnTouchUpInside(_ sender: AnyObject) {
         modeBool = !modeBool;
         setDisplays(calc)
     }
-    func setDisplays(calc:Calc){
+    func setDisplays(_ calc:Calc){
         if(modeBool){
             answerBar.text=calc.answerBar
 //            ansewrBarFull.text=calc.answerBarTotal
@@ -49,50 +49,50 @@ class ViewController: UIViewController {
         
     }
     func setButtonColor(){
-        plusBttn.setTitleColor(UIColor.blackColor(), forState:  .Normal)
-        minusBttn.setTitleColor(UIColor.blackColor(), forState:  .Normal)
-        equalsBttn.setTitleColor(UIColor.blackColor(), forState:  .Normal)
+        plusBttn.setTitleColor(UIColor.black, for:  UIControlState())
+        minusBttn.setTitleColor(UIColor.black, for:  UIControlState())
+        equalsBttn.setTitleColor(UIColor.black, for:  UIControlState())
         
         
-        if(calc.currentMode==Calc.modes.ADDITION){
-            plusBttn.setTitleColor(UIColor.whiteColor(), forState:  .Normal)
+        if(calc.currentMode==Calc.modes.addition){
+            plusBttn.setTitleColor(UIColor.white, for:  UIControlState())
         }
-        if(calc.currentMode==Calc.modes.SUBTACTION){
-            minusBttn.setTitleColor(UIColor.whiteColor(), forState:  .Normal)
+        if(calc.currentMode==Calc.modes.subtaction){
+            minusBttn.setTitleColor(UIColor.white, for:  UIControlState())
             
         }
-        if(calc.currentMode==Calc.modes.EQUALS){
-            equalsBttn.setTitleColor(UIColor.whiteColor(), forState:  .Normal)
+        if(calc.currentMode==Calc.modes.equals){
+            equalsBttn.setTitleColor(UIColor.white, for:  UIControlState())
         }
 
     }
     
-    @IBAction func numberTouchDown(sender: UIButton) {
+    @IBAction func numberTouchDown(_ sender: UIButton) {
         calc.number(sender.currentTitle!)
         setDisplays(calc)
         
     }
     
     
-    @IBAction func plusButtonTouchUpInside(sender: AnyObject) {
+    @IBAction func plusButtonTouchUpInside(_ sender: AnyObject) {
         
         calc.plus()
         setDisplays(calc)
         setButtonColor()
     }
 
-    @IBAction func minusButtonTouchUpInside(sender: AnyObject) {
+    @IBAction func minusButtonTouchUpInside(_ sender: AnyObject) {
         calc.minus()
         setDisplays(calc)
         setButtonColor()
     }
     
-    @IBAction func equalsButtonTouchUpInside(sender: AnyObject) {
+    @IBAction func equalsButtonTouchUpInside(_ sender: AnyObject) {
         calc.equals()
         setDisplays(calc)
         setButtonColor()
     }
-    @IBAction func clearButtonTouchUpInside(sender: AnyObject) {
+    @IBAction func clearButtonTouchUpInside(_ sender: AnyObject) {
         calc.clear()
         setDisplays(calc)
         setButtonColor()
@@ -111,22 +111,22 @@ class ViewController: UIViewController {
 //--------------------------------------------------------------------------
 class Calc{
     enum modes{
-        case NOT_SET
-        case ADDITION
-        case SUBTACTION
-        case EQUALS
+        case not_SET
+        case addition
+        case subtaction
+        case equals
     }
     enum action{
-        case CLEAR
-        case NUMBER
-        case ADDITION
-        case SUBTACTION
-        case EQUALS
+        case clear
+        case number
+        case addition
+        case subtaction
+        case equals
     }
     var currentNum:Int=0
     var totalNum:Int=0
-    var currentMode:modes = modes.NOT_SET
-    var lastAction:action=action.CLEAR
+    var currentMode:modes = modes.not_SET
+    var lastAction:action=action.clear
     var answerBar:String="0"
     var answerBarTotal:String=""
 
@@ -140,75 +140,75 @@ class Calc{
     func clear() -> Calc{
         currentNum=0
         totalNum=0
-        currentMode = modes.NOT_SET
+        currentMode = modes.not_SET
         answerBar="0"
         answerBarTotal=""
-        lastAction=action.CLEAR
+        lastAction=action.clear
         return self
     }
     
     
-    func number(num:String) -> Calc{
-        if( answerBar=="0" || !(currentMode==modes.NOT_SET ))
+    func number(_ num:String) -> Calc{
+        if( answerBar=="0" || !(currentMode==modes.not_SET ))
         {
-            if(!(answerBar=="-") && !(lastAction==action.NUMBER) ){
+            if(!(answerBar=="-") && !(lastAction==action.number) ){
                 answerBar=""
             }
         }
         answerBarTotal+="\(num)"
         answerBar="\(answerBar)\(num)"
-        lastAction=action.NUMBER
+        lastAction=action.number
         return self
     }
     
     func plus() -> Calc{
         answerBarTotal+="+"
-        if(lastAction==action.SUBTACTION || lastAction==action.ADDITION ){
-            currentMode=modes.ADDITION
+        if(lastAction==action.subtaction || lastAction==action.addition ){
+            currentMode=modes.addition
         }
         else if(!(answerBar=="") && !(answerBar=="-")){
             
             currentNum = Int(answerBar)!
             
             operate()
-            currentMode=modes.ADDITION
+            currentMode=modes.addition
             //answerBar="0"
             
         }
-        lastAction=action.ADDITION
+        lastAction=action.addition
         return self
     }
     
     func minus() -> Calc{
         answerBarTotal+="-"
         
-        if(lastAction==action.SUBTACTION || lastAction==action.ADDITION ){
-            currentMode=modes.SUBTACTION
-            lastAction=action.SUBTACTION
+        if(lastAction==action.subtaction || lastAction==action.addition ){
+            currentMode=modes.subtaction
+            lastAction=action.subtaction
             return self
         }
         else if(answerBar=="0"){
             answerBar="-"
-            lastAction=action.SUBTACTION
+            lastAction=action.subtaction
             return self
         }
         else if(answerBar=="-"){
-            lastAction=action.SUBTACTION
+            lastAction=action.subtaction
             return self
         }
         
         currentNum = Int(answerBar)!
         operate()
         //answerBar="0"
-        currentMode=modes.SUBTACTION
+        currentMode=modes.subtaction
         
         
-        lastAction=action.SUBTACTION
+        lastAction=action.subtaction
         return self
     }
     func equals() -> Calc{
         answerBarTotal+="="
-        if(!(answerBar=="") && !(answerBar=="-") && lastAction==action.NUMBER){
+        if(!(answerBar=="") && !(answerBar=="-") && lastAction==action.number){
             currentNum = Int(answerBar)!
             operate()
         }
@@ -216,17 +216,17 @@ class Calc{
         answerBar="\(totalNum)"
         answerBarTotal+="\(totalNum)|"
 
-        currentMode=modes.EQUALS
-        lastAction=action.EQUALS
+        currentMode=modes.equals
+        lastAction=action.equals
         return self
     }
-    private func operate() -> Calc{
+    fileprivate func operate() -> Calc{
         if((answerBar=="" || answerBar=="-")) {return self}
         
-        if(currentMode==modes.ADDITION ){
+        if(currentMode==modes.addition ){
             totalNum=totalNum+currentNum
         }
-        else if(currentMode==modes.SUBTACTION ){
+        else if(currentMode==modes.subtaction ){
             totalNum=totalNum-currentNum
         }
         else{
@@ -255,11 +255,11 @@ class CalTest{
         
         return "Ran \(count) Test[pass:\(pass) fail:\(fail)]... \(msg)"
     }
-    func buildMessage(msg:String,testResults:String)->String{
+    func buildMessage(_ msg:String,testResults:String)->String{
         if(testResults==""){return msg}
         return msg+"["+testResults+"]"
     }
-    func error(methodName:String, msg:String) -> String{
+    func error(_ methodName:String, msg:String) -> String{
         fail+=1
         return "ERROR: \(methodName): \(msg)"
     }

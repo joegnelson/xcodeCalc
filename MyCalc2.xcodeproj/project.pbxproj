@@ -97,6 +97,7 @@
 					E8505A6F1D78E85B00C68ACA = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = VGLRZ78LLJ;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -259,6 +260,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cccentric.com.MyCalc2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -273,6 +275,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cccentric.com.MyCalc2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -295,6 +298,7 @@
 				E8505A841D78E85B00C68ACA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
