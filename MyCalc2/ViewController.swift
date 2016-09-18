@@ -8,13 +8,96 @@
 
 import UIKit
 
+
+//--------------------------------------------------------------------------
 class ViewController: UIViewController {
+
+    
+    @IBOutlet weak var ModeBttn: UIButton!
+    var modeBool:Bool = true
+    @IBOutlet weak var answerBar: UILabel!
+//    @IBOutlet weak var ansewrBarFull: UILabel!
+    @IBOutlet weak var messageBar: UILabel!
+    
+    @IBOutlet weak var plusBttn: UIButton!
+    @IBOutlet weak var minusBttn: UIButton!
+    @IBOutlet weak var equalsBttn: UIButton!
+    var calc:Calc = Calc()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let test:CalTest = CalTest()
+        let msg:String = test.test()
+        messageBar.text = msg
+        setButtonColor()
+    }
+    
+    @IBAction func ModeBttnTouchUpInside(sender: AnyObject) {
+        modeBool = !modeBool;
+        setDisplays(calc)
+    }
+    func setDisplays(calc:Calc){
+        if(modeBool){
+            answerBar.text=calc.answerBar
+//            ansewrBarFull.text=calc.answerBarTotal
+        }else{
+//            ansewrBarFull.text=calc.answerBar
+            answerBar.text=calc.answerBarTotal
+        }
+        setButtonColor()
+        messageBar.text = calc.print2()
+        
+    }
+    func setButtonColor(){
+        plusBttn.setTitleColor(UIColor.blackColor(), forState:  .Normal)
+        minusBttn.setTitleColor(UIColor.blackColor(), forState:  .Normal)
+        equalsBttn.setTitleColor(UIColor.blackColor(), forState:  .Normal)
+        
+        
+        if(calc.currentMode==Calc.modes.ADDITION){
+            plusBttn.setTitleColor(UIColor.whiteColor(), forState:  .Normal)
+        }
+        if(calc.currentMode==Calc.modes.SUBTACTION){
+            minusBttn.setTitleColor(UIColor.whiteColor(), forState:  .Normal)
+            
+        }
+        if(calc.currentMode==Calc.modes.EQUALS){
+            equalsBttn.setTitleColor(UIColor.whiteColor(), forState:  .Normal)
+        }
+
+    }
+    
+    @IBAction func numberTouchDown(sender: UIButton) {
+        calc.number(sender.currentTitle!)
+        setDisplays(calc)
+        
+    }
+    
+    
+    @IBAction func plusButtonTouchUpInside(sender: AnyObject) {
+        
+        calc.plus()
+        setDisplays(calc)
+        setButtonColor()
     }
 
+    @IBAction func minusButtonTouchUpInside(sender: AnyObject) {
+        calc.minus()
+        setDisplays(calc)
+        setButtonColor()
+    }
+    
+    @IBAction func equalsButtonTouchUpInside(sender: AnyObject) {
+        calc.equals()
+        setDisplays(calc)
+        setButtonColor()
+    }
+    @IBAction func clearButtonTouchUpInside(sender: AnyObject) {
+        calc.clear()
+        setDisplays(calc)
+        setButtonColor()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -23,3 +106,246 @@ class ViewController: UIViewController {
 
 }
 
+
+
+//--------------------------------------------------------------------------
+class Calc{
+    enum modes{
+        case NOT_SET
+        case ADDITION
+        case SUBTACTION
+        case EQUALS
+    }
+    enum action{
+        case CLEAR
+        case NUMBER
+        case ADDITION
+        case SUBTACTION
+        case EQUALS
+    }
+    var currentNum:Int=0
+    var totalNum:Int=0
+    var currentMode:modes = modes.NOT_SET
+    var lastAction:action=action.CLEAR
+    var answerBar:String="0"
+    var answerBarTotal:String=""
+
+    func print2()-> String{
+        return "currentNum=\(currentNum)"
+            + " totalNum=\(totalNum)"
+            + " currentMode=\(currentMode)"
+            + " lastAction=\(lastAction)"
+    }
+    
+    func clear() -> Calc{
+        currentNum=0
+        totalNum=0
+        currentMode = modes.NOT_SET
+        answerBar="0"
+        answerBarTotal=""
+        lastAction=action.CLEAR
+        return self
+    }
+    
+    
+    func number(num:String) -> Calc{
+        if( answerBar=="0" || !(currentMode==modes.NOT_SET ))
+        {
+            if(!(answerBar=="-") && !(lastAction==action.NUMBER) ){
+                answerBar=""
+            }
+        }
+        answerBarTotal+="\(num)"
+        answerBar="\(answerBar)\(num)"
+        lastAction=action.NUMBER
+        return self
+    }
+    
+    func plus() -> Calc{
+        answerBarTotal+="+"
+        if(lastAction==action.SUBTACTION || lastAction==action.ADDITION ){
+            currentMode=modes.ADDITION
+        }
+        else if(!(answerBar=="") && !(answerBar=="-")){
+            
+            currentNum = Int(answerBar)!
+            
+            operate()
+            currentMode=modes.ADDITION
+            //answerBar="0"
+            
+        }
+        lastAction=action.ADDITION
+        return self
+    }
+    
+    func minus() -> Calc{
+        answerBarTotal+="-"
+        
+        if(lastAction==action.SUBTACTION || lastAction==action.ADDITION ){
+            currentMode=modes.SUBTACTION
+            lastAction=action.SUBTACTION
+            return self
+        }
+        else if(answerBar=="0"){
+            answerBar="-"
+            lastAction=action.SUBTACTION
+            return self
+        }
+        else if(answerBar=="-"){
+            lastAction=action.SUBTACTION
+            return self
+        }
+        
+        currentNum = Int(answerBar)!
+        operate()
+        //answerBar="0"
+        currentMode=modes.SUBTACTION
+        
+        
+        lastAction=action.SUBTACTION
+        return self
+    }
+    func equals() -> Calc{
+        answerBarTotal+="="
+        if(!(answerBar=="") && !(answerBar=="-") && lastAction==action.NUMBER){
+            currentNum = Int(answerBar)!
+            operate()
+        }
+        currentNum=totalNum
+        answerBar="\(totalNum)"
+        answerBarTotal+="\(totalNum)|"
+
+        currentMode=modes.EQUALS
+        lastAction=action.EQUALS
+        return self
+    }
+    private func operate() -> Calc{
+        if((answerBar=="" || answerBar=="-")) {return self}
+        
+        if(currentMode==modes.ADDITION ){
+            totalNum=totalNum+currentNum
+        }
+        else if(currentMode==modes.SUBTACTION ){
+            totalNum=totalNum-currentNum
+        }
+        else{
+            totalNum=currentNum
+        }
+        answerBar="\(totalNum)"
+        return self
+    }
+    
+}
+
+//--------------------------------------------------------------------------
+class CalTest{
+    var count:Int=0
+    var pass:Int=0
+    var fail:Int=0
+    var errors = [String]()
+    
+    func test() -> String{
+        var msg:String=""
+        msg = buildMessage(msg,testResults: testMultiPlus())
+        msg = buildMessage(msg,testResults: testMinus())
+        msg = buildMessage(msg,testResults: testNumberAfterEquals())
+        msg = buildMessage(msg,testResults: testPlusAfterEquals())
+        msg = buildMessage(msg,testResults: testPlusMinusEquals())
+        
+        return "Ran \(count) Test[pass:\(pass) fail:\(fail)]... \(msg)"
+    }
+    func buildMessage(msg:String,testResults:String)->String{
+        if(testResults==""){return msg}
+        return msg+"["+testResults+"]"
+    }
+    func error(methodName:String, msg:String) -> String{
+        fail+=1
+        return "ERROR: \(methodName): \(msg)"
+    }
+    //--
+    func testZeroMinus() -> String{
+        count+=1
+        
+        let methodName:String="testZeroMinus"
+        let calc1:Calc = Calc()
+        calc1.number("3").plus().number("0").minus()
+        if(!( calc1.answerBar=="0")){return error( methodName,msg: "(3+0-) answerBar=\(calc1.answerBar)")}
+        
+        pass+=1
+        return ""
+        
+    }
+    func testPlusMinusEquals() -> String{
+        count+=1
+        
+        let methodName:String="testPlusMinusEquals"
+        let calc1:Calc = Calc()
+        calc1.number("3").minus().number("63").plus().minus().equals()
+        if(!( calc1.totalNum==(-60))){return error( methodName,msg: "(3-63+-=) totalNum=\(calc1.totalNum)")}
+        
+        pass+=1
+        return ""
+        
+    }
+    func testPlusAfterEquals() -> String{
+        count+=1
+        
+        let methodName:String="testPlusAfterEquals"
+        let calc1:Calc = Calc()
+        calc1.number("3").minus().number("63").plus().equals()
+        if(!( calc1.totalNum==(-60))){return error( methodName,msg: "(3-36+=-33) totalNum=\(calc1.totalNum)")}
+        
+        
+        pass+=1
+        return ""
+        
+    }
+    func testNumberAfterEquals() -> String{
+        count+=1
+        
+        let methodName:String="testNumberAfterEquals"
+        let calc1:Calc = Calc()
+        calc1.number("3").number("5").minus().number("5").equals().number("7").equals()
+        if(!( calc1.totalNum==7)){return error( methodName,msg: "(35-5=7) totalNum=\(calc1.totalNum)")}
+        
+        
+        pass+=1
+        return ""
+        
+    }
+    func testMultiPlus() -> String{
+        count+=1
+        let methodName:String="testMultiPlus"
+        let calc1:Calc = Calc()
+        calc1.number("3").number("2").plus().number("5").plus()
+        if(!( calc1.answerBar=="37")){return error(methodName,msg: "didnt keep last num")}
+        if(!( calc1.totalNum==37)){return error((methodName),msg: "(32+5+) totalNum=\(calc1.totalNum)")}
+        calc1.number("7").equals()
+        if(!( calc1.totalNum==44)){return error(methodName,msg: "(32+5+7) totalNum=\(calc1.totalNum)")}
+        
+        pass+=1
+        return ""
+        
+    }
+    func testMinus() -> String{
+        count+=1
+        let methodName:String="testMinus"
+        let calc1:Calc = Calc()
+        calc1.number("3").number("5").minus().number("5").equals()
+        if(!( calc1.totalNum==30)){return error(methodName,msg: "(32-5) totalNum=\(calc1.totalNum)")}
+        
+        calc1.clear()
+        calc1.minus()
+        if(!(calc1.answerBar=="-")){return error(methodName,msg: "(-) answerBar=\(calc1.answerBar)")}
+        calc1.number("3").number("5").minus()
+        if(!(calc1.currentNum==(-35))){return error(methodName,msg: "(-35-) totalNum=\(calc1.totalNum)")}
+        calc1.number("5").equals()
+        if(!( calc1.totalNum==(-40))){return error(methodName,msg: "(-35-5) totalNum=\(calc1.totalNum)")}
+        
+        pass+=1
+        return ""
+        
+    }
+    
+}
