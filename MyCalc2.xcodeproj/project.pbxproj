@@ -12,6 +12,7 @@
 		E8505A791D78E85B00C68ACA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8505A771D78E85B00C68ACA /* Main.storyboard */; };
 		E8505A7B1D78E85B00C68ACA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8505A7A1D78E85B00C68ACA /* Assets.xcassets */; };
 		E8505A7E1D78E85B00C68ACA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8505A7C1D78E85B00C68ACA /* LaunchScreen.storyboard */; };
+		E8F5423F1D8EA8B2005B136C /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F5423E1D8EA8B2005B136C /* PopupViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		E8505A7A1D78E85B00C68ACA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E8505A7D1D78E85B00C68ACA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E8505A7F1D78E85B00C68ACA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E8F5423E1D8EA8B2005B136C /* PopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 		E8505A721D78E85B00C68ACA /* MyCalc2 */ = {
 			isa = PBXGroup;
 			children = (
+				E8F5423E1D8EA8B2005B136C /* PopupViewController.swift */,
 				E8505A731D78E85B00C68ACA /* AppDelegate.swift */,
 				E8505A751D78E85B00C68ACA /* ViewController.swift */,
 				E8505A771D78E85B00C68ACA /* Main.storyboard */,
@@ -139,6 +142,7 @@
 			files = (
 				E8505A761D78E85B00C68ACA /* ViewController.swift in Sources */,
 				E8505A741D78E85B00C68ACA /* AppDelegate.swift in Sources */,
+				E8F5423F1D8EA8B2005B136C /* PopupViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

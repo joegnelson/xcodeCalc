@@ -12,7 +12,8 @@ import UIKit
 //--------------------------------------------------------------------------
 class ViewController: UIViewController {
 
-    
+    var myInformation:String = ""
+
     @IBOutlet weak var ModeBttn: UIButton!
     var modeBool:Bool = true
     @IBOutlet weak var answerBar: UILabel!
@@ -23,6 +24,34 @@ class ViewController: UIViewController {
     @IBOutlet weak var minusBttn: UIButton!
     @IBOutlet weak var equalsBttn: UIButton!
     var calc:Calc = Calc()
+/*
+    override func prepare(for segue: UIStoryboardSegue,sender: Any?){
+        let destination: PopupViewController = segue.destination as! PopupViewController
+        destination.myInformation = self.myInformation
+        
+//        if segue.identifier == "MySegueID" {
+//            if let destination = segue.destination as? PopupViewController {
+//                destination.myInformation = self.myInformation
+                
+//            }
+//        }
+    }
+    //    override func performSegue(withIdentifier identifier: String,
+    //                      sender: Any?)
+    //    {
+    //        print("iu")
+    //    }
+*/    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "showDetail" {
+//            if let indexPath = self.tableView.indexPathForSelectedRow {
+//                let object = objects[indexPath.row] as! NSDate
+                let controller = (segue.destination as! PopupViewController) 
+                controller.myInformation = calc.answerBarTotal
+//            }
+//        }
+    }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +59,24 @@ class ViewController: UIViewController {
         let msg:String = test.test()
         messageBar.text = msg
         setButtonColor()
+//        let gestureRecognizer = UITapGestureRecognizer(target: self, action: Selector(("handleTap:")))
+//        answerBar.addGestureRecognizer(gestureRecognizer)
     }
     
+//    func handleTap(gestureRecognizer: UIGestureRecognizer) {
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let vc = storyboard.instantiateViewController(withIdentifier: "next")
+//        self.present(vc, animated: true, completion: nil)
+//    }
+    
+    @IBAction func showBttnTouchUpInside(_ sender: AnyObject) {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sbPopupId") as! PopupViewController
+        self.addChildViewController(popOverVC)
+        popOverVC.view.frame = self.view.frame
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParentViewController: self)
+        myInformation=messageBar.text!
+    }
     @IBAction func ModeBttnTouchUpInside(_ sender: AnyObject) {
         modeBool = !modeBool;
         setDisplays(calc)
@@ -67,7 +112,7 @@ class ViewController: UIViewController {
 
     }
     
-    @IBAction func numberTouchDown(_ sender: UIButton) {
+    @IBAction  func numberTouchDown(_ sender: UIButton) {
         calc.number(sender.currentTitle!)
         setDisplays(calc)
         
@@ -137,7 +182,7 @@ class Calc{
             + " lastAction=\(lastAction)"
     }
     
-    func clear() -> Calc{
+    @discardableResult func clear() -> Calc{
         currentNum=0
         totalNum=0
         currentMode = modes.not_SET
@@ -148,7 +193,7 @@ class Calc{
     }
     
     
-    func number(_ num:String) -> Calc{
+    @discardableResult func number(_ num:String) -> Calc{
         if( answerBar=="0" || !(currentMode==modes.not_SET ))
         {
             if(!(answerBar=="-") && !(lastAction==action.number) ){
@@ -161,7 +206,7 @@ class Calc{
         return self
     }
     
-    func plus() -> Calc{
+    @discardableResult func plus() -> Calc{
         answerBarTotal+="+"
         if(lastAction==action.subtaction || lastAction==action.addition ){
             currentMode=modes.addition
@@ -179,7 +224,7 @@ class Calc{
         return self
     }
     
-    func minus() -> Calc{
+    @discardableResult func minus() -> Calc{
         answerBarTotal+="-"
         
         if(lastAction==action.subtaction || lastAction==action.addition ){
@@ -206,7 +251,7 @@ class Calc{
         lastAction=action.subtaction
         return self
     }
-    func equals() -> Calc{
+    @discardableResult func equals() -> Calc{
         answerBarTotal+="="
         if(!(answerBar=="") && !(answerBar=="-") && lastAction==action.number){
             currentNum = Int(answerBar)!
@@ -220,7 +265,7 @@ class Calc{
         lastAction=action.equals
         return self
     }
-    fileprivate func operate() -> Calc{
+    @discardableResult fileprivate func operate() -> Calc{
         if((answerBar=="" || answerBar=="-")) {return self}
         
         if(currentMode==modes.addition ){
