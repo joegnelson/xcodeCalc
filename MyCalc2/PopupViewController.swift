@@ -10,13 +10,15 @@ import UIKit
 
 class PopupViewController: UIViewController {
 
+    @IBOutlet weak var uiTextView: UITextView!
     var myInformation:String = ""
-    @IBOutlet weak var PopupLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        PopupLabel.text=myInformation
         self.view.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
         showAnimate()
+        
+        uiTextView.text=calc.answerBarTotal
+        uiTextView.isScrollEnabled = true
         //PopupLabel = self.view.superview;
         // Do any additional setup after loading the view.
     }

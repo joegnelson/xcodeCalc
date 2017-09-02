@@ -8,6 +8,7 @@
 
 import UIKit
 
+var calc:Calc = Calc()
 
 //--------------------------------------------------------------------------
 class ViewController: UIViewController {
@@ -23,7 +24,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var plusBttn: UIButton!
     @IBOutlet weak var minusBttn: UIButton!
     @IBOutlet weak var equalsBttn: UIButton!
-    var calc:Calc = Calc()
 /*
     override func prepare(for segue: UIStoryboardSegue,sender: Any?){
         let destination: PopupViewController = segue.destination as! PopupViewController
